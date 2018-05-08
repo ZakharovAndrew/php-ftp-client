@@ -17,8 +17,8 @@ $ftp = new FtpClient();
 $ftp->connect($host, true, 22, $timeout);
 $ftp->login($login, $password);
 ```
-# Usage
-## Using Passive Mode :
+## Usage
+### Using Passive Mode :
 ```php
 // This uses passive mode
 $ftp->passive();
@@ -27,9 +27,18 @@ $ftp->passive();
 $ftp->passive(false);
 ```
 
-##Running custom command on remote server
+### Running custom command on remote server
 ```php
 $ftp->exec($command);
+```
+
+All FTP PHP functions are supported and some improved :
+```php
+// Creates a directory
+$ftp->mkdir('path/of/directory/to/create');
+
+// Get last modified time to file
+$ftp->getLastMod('path/to/file');
 ```
 
 ## API doc
