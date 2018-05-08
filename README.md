@@ -18,6 +18,19 @@ $ftp->connect($host, true, 22, $timeout);
 $ftp->login($login, $password);
 ```
 ## Usage
+Upload all files and all directories is easy :
+
+```php
+// upload with the BINARY mode
+$ftp->put($local_file, $remote_file);
+
+// Is equal to
+$ftp->put($local_file, $remote_file, FTP_BINARY);
+
+// or upload with the ASCII mode
+$ftp->put($local_file, $remote_file, FTP_ASCII);
+```
+
 ### Using Passive Mode :
 ```php
 // This uses passive mode
@@ -46,6 +59,9 @@ $ftp->get($remote_file, $local_file, FTP_ASCII);
 
 ### All FTP PHP functions are supported and some improved :
 ```php
+// Returns a list of files in the given directory
+$ftp->nList('path/of/directory/to/create');
+
 // Creates a directory
 $ftp->mkdir('path/of/directory/to/create');
 
@@ -56,7 +72,15 @@ $ftp->getLastMod('file.php');
 $ftp->chmod(0777, 'file.php');
 
 // Get file size
-$ftp->getSize('file.php')
+$ftp->getSize('file.php');
+
+// Get current directory
+$ftp->pwd();
+
+// Delete file on FTP server
+$ftp->delete('file.php');
+
+//and more...
 ```
 
 ## API doc
