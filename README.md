@@ -32,13 +32,31 @@ $ftp->passive(false);
 $ftp->exec($command);
 ```
 
-All FTP PHP functions are supported and some improved :
+### Download file from FTP server
+```php
+// download with the BINARY mode
+$ftp->get($remote_file, $local_file);
+
+// Is equal to
+$ftp->get($remote_file, $local_file, FTP_BINARY);
+
+// download with the ASCII mode
+$ftp->get($remote_file, $local_file, FTP_ASCII);
+```
+
+### All FTP PHP functions are supported and some improved :
 ```php
 // Creates a directory
 $ftp->mkdir('path/of/directory/to/create');
 
 // Get last modified time to file
-$ftp->getLastMod('path/to/file');
+$ftp->getLastMod('file.php');
+
+// Set permissions on a file via FTP
+$ftp->chmod(0777, 'file.php');
+
+// Get file size
+$ftp->getSize('file.php')
 ```
 
 ## API doc
