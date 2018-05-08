@@ -170,7 +170,19 @@ class FtpClient {
 	return ftp_pwd($this->conn);
     }
 
-	
+    /**
+     * Requests execution of a command on the FTP server
+     *
+     * @param string $command
+     */
+    public function exec($command = null) {
+	if (ftp_exec($this->conn, $command) !== false) {
+            return true;
+        } 
+        // exec failed
+        throw new Exception("Could not execute \"{$command}\"");
+    }
+    
     /**
      * Get file size
      *
