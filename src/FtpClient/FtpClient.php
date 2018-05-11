@@ -99,7 +99,7 @@ class FtpClient {
      * Check is Dir?
      *
      * @param string $directory
-     * @return boolean
+     * @return bool
      */
     public function isDir($directory) {
         if (@ftp_chdir($this->conn, $directory)) {
@@ -128,8 +128,68 @@ class FtpClient {
             return array();
 	}
     }
-
 	
+    /**
+     * Returns a list of file or directory
+     * 
+     * @param bool   $isDir  'file' or 'dir'
+     * @param string $directory
+     * @param bool   $recursive
+     * @return array file list
+     * @throws Exception
+     */
+    public function listItem($isDir = false, $directory = '.', $recursive = false, $ignoreList = array())
+    {
+        $fileList = $this->nList($directory);
+        $listItem = array();
+        foreach ($fileList as $file) {
+            // remove directory and subdirectory name
+            $file = str_replace("$directory/", '', $file);
+            if ($isDir) {
+                //if dir not in ignore
+                if ($this->isDir("$directory/$file") && $this->ignoreItem($isDir, $file, $ignoreList) !== true) {
+                    $listItem[] = $file;
+                    if ($recursive) {
+                        $listItem = array_merge($fileInfo, $this->listItem($isDir, "$directory/$file", $recursive, $ignoreList));
+                    }
+                }
+            // check file
+            } else {
+                if ($this->ignoreItem($isDir, $file, $ignoreList) !== true) {
+                    //if not dir
+                    if (!$this->isDir("$directory/$file")) {
+                        $listItem[] = $file;
+                    } else if ($recursive) {
+                        $listItem = array_merge($fileInfo, $this->listItem($isDir, "$directory/$file", $recursive, $ignoreList));
+                    }
+                }
+            }
+        }
+        return $listItem;
+    }
+    
+     /**
+     * Ignore item to itemList
+     * 
+     * @param boolean $isDir if false then file
+     * @param string $filename
+     * @param array $ignoreList array of names or extension item for ignore
+     * @return boolean
+     */
+    private function ignoreItem($isDir, $filename, $ignoreList)
+    {
+        // check extension for ignore
+        if (!$isDir && in_array(pathinfo($filename, PATHINFO_EXTENSION), $ignoreList)) {
+            return true;
+        // check dir for ignore
+        } elseif ($isDir && in_array($filename, $ignoreList)) {
+            return true;
+        }
+        // ignore item
+        return false;
+    }
+
+    
     /**
      * Create directory on FTP server
      *

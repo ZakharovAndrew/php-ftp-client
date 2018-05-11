@@ -40,6 +40,21 @@ $ftp->passive();
 $ftp->passive(false);
 ```
 
+### Returns a list of files or directory (recursive, filter):
+```php
+// Returns a list of files
+$ftp->listItem();
+
+// Returns a list of directories
+$ftp->listItem(true);
+
+// Returns a list of files in the given directory
+$ftp->listItem(false, 'path/of/directory');
+
+// Returns all files within folder and subfolders ignore *.zip files
+$ftp->listItem(false, 'path/of/directory', true, array('zip'));
+```
+
 ### Running custom command on remote server
 ```php
 $ftp->exec($command);
