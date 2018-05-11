@@ -145,24 +145,13 @@ class FtpClient {
         foreach ($fileList as $file) {
             // remove directory and subdirectory name
             $file = str_replace("$directory/", '', $file);
-            if ($isDir) {
-                //if dir not in ignore
-                if ($this->isDir("$directory/$file") && $this->ignoreItem($isDir, $file, $ignoreList) !== true) {
-                    $listItem[] = $file;
-                    if ($recursive) {
-                        $listItem = array_merge($fileInfo, $this->listItem($isDir, "$directory/$file", $recursive, $ignoreList));
-                    }
-                }
-            // check file
-            } else {
-                if ($this->ignoreItem($isDir, $file, $ignoreList) !== true) {
-                    //if not dir
-                    if (!$this->isDir("$directory/$file")) {
-                        $listItem[] = $file;
-                    } else if ($recursive) {
-                        $listItem = array_merge($fileInfo, $this->listItem($isDir, "$directory/$file", $recursive, $ignoreList));
-                    }
-                }
+            // if dir or file not in ignore
+            if ($this->isDir("$directory/$file") === $isDir && $this->ignoreItem($isDir, $file, $ignoreList) !== true) {
+                $listItem[] = $file;
+            }
+            // recursive
+            if ($recursive  && $isDir && $this->ignoreItem($isDir, $file, $ignoreList) !== true) {
+                $listItem = array_merge($listItem, $this->listItem($isDir, "$directory/$file", $recursive, $ignoreList));
             }
         }
         return $listItem;
