@@ -102,11 +102,10 @@ class FtpClient {
      * @return bool
      */
     public function isDir($directory) {
-        if (@ftp_chdir($this->conn, $directory)) {
-            ftp_chdir($this->conn, '..');
-            return true;
-	} else {
-            return false;
+        if(ftp_size($this->conn, $directory) == '-1'){
+            return true; // Is directory
+        }else{
+            return false; // Is file
         }
     }
 	
